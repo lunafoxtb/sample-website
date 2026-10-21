@@ -1,54 +1,212 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cloudflare Pagesテスト用</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- ▼ 変更ポイント1：ページのタイトルと説明文（検索結果やSNSに表示されます） -->
+  <title>サイト名 | サンプルサイト</title>
+  <meta name="description" content="ここにサイトの説明文を入れます（100文字程度）。">
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-*{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:'Inter',sans-serif;background:#f8f9fa;color:#333;line-height:1.6;display:flex;flex-direction:column;min-height:100vh;}
-    header{background:linear-gradient(135deg,#4f46e5,#3b82f6);color:#fff;padding:3rem 2rem;text-align:center;}
-    header h1{font-size:2.5rem;}
-    header p{font-size:1.2rem;opacity:0.9;}
-    main{flex:1;padding:2rem;max-width:960px;margin:auto;}
-    .section{background:#fff;border-radius:12px;padding:2rem;box-shadow:0 8px 16px rgba(0,0,0,0.05);margin-bottom:2rem;transition:transform 0.3s;}
-    .section:hover{transform:translateY(-4px);}
-    .cta-button{display:inline-block;margin-top:1rem;background:#4f46e5;color:#fff;padding:0.75rem 1.5rem;font-weight:600;border:none;border-radius:8px;cursor:pointer;transition:background 0.3s;}
-    .cta-button:hover{background:#3730a3;}
-    footer{text-align:center;font-size:0.9rem;padding:1rem;color:#888;}
+    /* ▼ 変更ポイント2：色・文字・幅はここだけ変えれば全体に反映されます */
+    :root {
+      --color-bg: #ffffff;          /* 背景色 */
+      --color-bg-sub: #f4f6f8;      /* 薄い背景（セクション交互用） */
+      --color-text: #1f2933;        /* 本文の色 */
+      --color-text-sub: #52606d;    /* 補足テキストの色 */
+      --color-accent: #2563eb;      /* メインカラー（ボタン・リンク） */
+      --color-accent-text: #ffffff; /* ボタン上の文字色 */
+      --color-border: #d9e0e7;      /* 罫線の色 */
+      --max-width: 960px;           /* コンテンツの最大幅 */
+      --radius: 8px;                /* 角の丸み */
+      --font-base: -apple-system, BlinkMacSystemFont, "Hiragino Sans",
+                   "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif;
+    }
+
+    /* ダークモード対応（閲覧者の設定に合わせて自動切り替え） */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-bg: #0f1720;
+        --color-bg-sub: #17212c;
+        --color-text: #e6ebf0;
+        --color-text-sub: #9aa8b5;
+        --color-accent: #60a5fa;
+        --color-accent-text: #0f1720;
+        --color-border: #2a3846;
+      }
+    }
+
+    /* ---- 基本設定（通常は触らなくてOK） ---- */
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-base);
+      line-height: 1.8;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    img { max-width: 100%; height: auto; }
+    a { color: var(--color-accent); }
+    a:focus-visible, .button:focus-visible {
+      outline: 3px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    section { padding: 64px 0; }
+    section:nth-of-type(even) { background: var(--color-bg-sub); }
+    h1, h2, h3 { line-height: 1.4; margin: 0 0 16px; }
+    h1 { font-size: clamp(1.9rem, 5vw, 2.8rem); }
+    h2 { font-size: 1.6rem; }
+    h3 { font-size: 1.15rem; }
+    p { margin: 0 0 16px; }
+
+    /* ---- ヘッダー ---- */
+    header {
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-bg);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px 24px;
+      padding: 14px 20px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+    .logo { font-weight: 700; font-size: 1.1rem; color: var(--color-text); text-decoration: none; }
+    nav ul { display: flex; flex-wrap: wrap; gap: 8px 20px; list-style: none; margin: 0; padding: 0; }
+    nav a { color: var(--color-text-sub); text-decoration: none; }
+    nav a:hover { color: var(--color-accent); }
+
+    /* ---- トップ（ヒーロー） ---- */
+    .hero { padding: 96px 0 80px; }
+    .hero p { color: var(--color-text-sub); font-size: 1.1rem; max-width: 36em; }
+    .button {
+      display: inline-block;
+      padding: 12px 28px;
+      border-radius: var(--radius);
+      background: var(--color-accent);
+      color: var(--color-accent-text);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .button:hover { opacity: 0.9; }
+
+    /* ---- カード一覧 ---- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      padding: 24px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      background: var(--color-bg);
+    }
+    .card p { color: var(--color-text-sub); margin: 0; }
+
+    /* ---- フッター ---- */
+    footer {
+      padding: 32px 0;
+      border-top: 1px solid var(--color-border);
+      color: var(--color-text-sub);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
   </style>
 </head>
+
 <body>
 
+  <!-- ▼ 変更ポイント3：ヘッダー（サイト名とメニュー） -->
   <header>
-    <h1>Cloudflare Pagesテスト</h1>
-    <p>これはCloudflare Pagesの紹介で使用するサンプルサイトです</p>
+    <div class="header-inner">
+      <a class="logo" href="#top">サイト名</a>
+      <nav aria-label="メインメニュー">
+        <ul>
+          <li><a href="#about">私たちについて</a></li>
+          <li><a href="#services">サービス</a></li>
+          <li><a href="#contact">お問い合わせ</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <section class="section">
-      <h2>このページについて</h2>
-      <p>
-        このサイトはHTML/CSS/JavaScriptだけで構成されており、Cloudflare Pagesで無料でホスティングされています。
-      </p>
-      <button class="cta-button" id="alertBtn">もっと知る</button>
+  <main id="top">
+
+    <!-- ▼ トップ：一番最初に見せたいメッセージ -->
+    <section class="hero">
+      <div class="container">
+        <h1>ここにキャッチコピーを入れます</h1>
+        <p>サイトの内容を一言で伝える説明文です。誰に向けて、何を提供するサイトかを書きます。</p>
+        <a class="button" href="#contact">お問い合わせ</a>
+      </div>
     </section>
 
-    <section class="section">
-      <h2>使い方</h2>
-      <ol>
-        <li>このファイルをGitHubにpush</li>
-        <li>Cloudflare Pagesに接続</li>
-        <li>数秒でサイトが公開されます</li>
-      </ol>
+    <!-- ▼ 私たちについて -->
+    <section id="about">
+      <div class="container">
+        <h2>私たちについて</h2>
+        <p>ここに自己紹介や会社・活動の紹介を書きます。段落を増やすときは &lt;p&gt; ～ &lt;/p&gt; をコピーして追加します。</p>
+        <p>2つ目の段落のサンプルです。</p>
+      </div>
     </section>
+
+    <!-- ▼ サービス（カードは増減可能：<div class="card"> ～ </div> を1セットとしてコピー） -->
+    <section id="services">
+      <div class="container">
+        <h2>サービス</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>項目1</h3>
+            <p>項目1の説明文を入れます。</p>
+          </div>
+          <div class="card">
+            <h3>項目2</h3>
+            <p>項目2の説明文を入れます。</p>
+          </div>
+          <div class="card">
+            <h3>項目3</h3>
+            <p>項目3の説明文を入れます。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ▼ お問い合わせ（メールアドレスを自分のものに変更） -->
+    <section id="contact">
+      <div class="container">
+        <h2>お問い合わせ</h2>
+        <p>ご連絡はメールでお願いします。</p>
+        <a class="button" href="mailto:example@example.com">メールを送る</a>
+      </div>
+    </section>
+
   </main>
-  
-  <script>
-    document.getElementById('alertBtn').addEventListener('click', () => {alert('参考になったら「いいね」をお願いします!');});
-  </script>
+
+  <!-- ▼ フッター -->
+  <footer>
+    <div class="container">
+      <small>&copy; 2026 サイト名</small>
+    </div>
+  </footer>
+
 </body>
 </html>
-
 
